@@ -138,13 +138,15 @@ function dibujar(){
 
 	};
 
-	ctx.font = "60px bold sans";
-	ctx.fillStyle = "#000000";
-	ctx.fillText( partida.actual, 248, 50);
+	ctx.font = " bold 60px Neue";
+	ctx.fillStyle = "#353535";
+	ctx.fillText(partida.actual, 248, 50);
 
-	ctx.font = "30px bold sans";
-	ctx.fillStyle = "#000000";
-	ctx.fillText("Record: " + partida.maximo, 360, 480);
+	ctx.font = " normal 18px Helvetica Neue";
+	ctx.fillText("Por: @MorenoDaryl ", 340, 490);
+
+	ctx.font = " normal 18px Helvetica Neue";
+	ctx.fillText("Record: " + partida.maximo, 10, 490);
 
 	window.requestAnimationFrame(dibujar);
 
@@ -238,7 +240,7 @@ function animarWoppy(){
 
 			if(key.activo){
 				key.activo = false;
-				woppy.aceleracion = 1.8 *-1;  
+				woppy.aceleracion = 1.72 *-1;  
 			}
 			
 			if (woppy.alto + woppy.aceleracion > 0) {
@@ -269,22 +271,21 @@ document.addEventListener("keydown",function(e){
 		};
 		if (partida.estado == 2 & woppy.vivo) {
 			key.activo = true;
-			e.preventDefault();
 		};
 		
 	}; 
-
+	e.preventDefault();
 	resetear();
 })
 
-document.addEventListener("mousedown",function(e){
+$(document).on("mousedown touchstart",function(e){
 	if (partida.estado ==1) {
 		partida.estado = 2;
 	};
 	if (partida.estado == 2 & woppy.vivo) {
 		key.activo = true;
-		e.preventDefault();
 	};	
+	e.preventDefault();
 	resetear();
 });
 

@@ -1,10 +1,40 @@
 body{
 	text-align: center;
-	font-family: 'raleway';
+	font-family: "Helvetica Neue", "raleway";
+	width: 510px;
+	margin: 0 auto;
+}
+
+h1{
+	color: #272822;
+	/*font-size: 1.5em;*/
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+.contenedor_canvas{
+	position: relative;
+}
+
+img{
+	margin-bottom: 0;
 }
 
 #micanvas{
 	background-color: white;
 	box-shadow: 0 0 3px rgba(0,0,0,0.3);
-	min-height: 100%;
+}
+
+#follow{
+	position: absolute;
+	top: 475px;
+	right: -10px;
+	margin-right: 0;
+}
+
+#tweet{
+	position: absolute;
+	top: 0.5em;
+	right: 0.5em;
+
 }
