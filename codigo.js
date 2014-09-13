@@ -303,8 +303,8 @@ document.addEventListener("mousedown",function(e){
 	};
 	if (partida.estado == 2 & woppy.vivo) {
 		key.activo = true;
+		e.preventDefault();
 	};	
-	e.preventDefault();
 	resetear();
 });
 
