@@ -117,6 +117,16 @@ for (var i = tubo.length - 1; i >= 0; i--) {
 	tubo[i] = new tubos();
 };
 
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+
 function dibujar(){
 	if (images.bgCargado) {
 		ctx.drawImage(images.bg,0,0);		
@@ -148,11 +158,9 @@ function dibujar(){
 	ctx.font = " normal 18px Helvetica Neue";
 	ctx.fillText("Record: " + partida.maximo, 10, 490);
 
-	window.requestAnimationFrame(dibujar);
+	requestAnimFrame(dibujar);
 
-	// console.log(contador++);
-
-}
+};
 
 
 function animarTubos(){
@@ -276,9 +284,20 @@ document.addEventListener("keydown",function(e){
 	}; 
 	e.preventDefault();
 	resetear();
-})
+});
 
-$(document).on("mousedown touchstart",function(e){
+document.addEventListener("touchstart",function(e){
+	if (partida.estado ==1) {
+		partida.estado = 2;
+	};
+	if (partida.estado == 2 & woppy.vivo) {
+		key.activo = true;
+	};	
+	e.preventDefault();
+	resetear();
+});
+
+document.addEventListener("mousedown",function(e){
 	if (partida.estado ==1) {
 		partida.estado = 2;
 	};
