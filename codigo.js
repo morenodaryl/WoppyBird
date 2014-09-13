@@ -297,7 +297,7 @@ document.addEventListener("touchstart",function(e){
 	resetear();
 });
 
-document.addEventListener("mousedown",function(e){
+document.getElementById("micanvas").addEventListener("mousedown",function(e){
 	if (partida.estado ==1) {
 		partida.estado = 2;
 	};
