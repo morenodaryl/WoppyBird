@@ -16,6 +16,15 @@ h1{
 	position: relative;
 }
 
+#mitap{
+	display: none;
+	padding: 50px 30px;
+	text-align: center;
+	background-color: #0A0446;
+	color: white;
+	cursor: pointer;
+};
+
 img{
 	margin-bottom: 0;
 }

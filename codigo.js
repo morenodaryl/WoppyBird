@@ -13,8 +13,10 @@ var images = {
 	woppymuerto: new Image(),
 	piso: new Image(),
 	tubos: new Image(),
+	inicio: new Image(),
 	woppymuertoCargado: false,
 	bgCargado: false,
+	inicioCargado: false,
 	woppyCargado: false,
 	pisoCargado: false,
 	tubosCargado: false,
@@ -25,7 +27,8 @@ var srcs = {
 	woppysrc: "img/woppy.png",
 	woppymuertosrc: "img/woppymuerto.png",
 	pisosrc: "img/piso.png",
-	tubossrc: "img/tubos.png"
+	tubossrc: "img/tubos.png",
+	iniciosrc: "img/inicio.png"
 }
 
 var personaje = function(){
@@ -61,32 +64,44 @@ partida.estado = 1;
 
 function generarAlto(){
 	max = 280;
-	min= 110;
+	min= 100;
 	var alto = Math.floor((Math.random()*(max-min+1))+min);
 	alto *= -1;
 	return alto;
 }
 
 function verAlto(tubo){
-	alto= tubo.alto + 310;
+	alto= tubo.alto + 312;
 	return alto;
 }
 
 var canvas;
 var ctx;
 var woppy = new personaje();
+var tap;
+var isTouch = (('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0));
 
 
 function start(){
+
+	if (!isTouch) {
+		tap = new Audio("sound/tap.mp3");
+	};
+	
+
+
 	canvas = document.getElementById("micanvas");
 	canvas.width = 500;
 	canvas.height = 500;
+
+
 	ctx = canvas.getContext("2d");
 	images.bg.src = srcs.bgsrc;
 	images.piso.src = srcs.pisosrc;
 	images.woppy.src = srcs.woppysrc;
 	images.woppymuerto.src = srcs.woppymuertosrc;
 	images.tubos.src = srcs.tubossrc;
+	images.inicio.src = srcs.iniciosrc;
 	images.bg.onload = function(){
 		images.bgCargado = true;
 		dibujar();
@@ -107,6 +122,12 @@ function start(){
 		images.woppymuertoCargado = true;
 		dibujar();
 	}
+	images.inicio.onload = function(){
+		images.inicioCargado = true;
+		dibujar();
+	}
+
+	ejecutarEventos();
 
 }
 
@@ -144,13 +165,31 @@ function dibujar(){
 		ctx.drawImage(images.piso,0,420);	
 	};
 
-	if (partida.estado == 1) {
-
+	if (partida.estado == 1 && images.inicioCargado) {
+		ctx.drawImage(images.inicio,20,40);	
 	};
 
 	ctx.font = " bold 60px Neue";
-	ctx.fillStyle = "#353535";
-	ctx.fillText(partida.actual, 248, 50);
+	ctx.fillStyle = "#F7F7F7";
+	
+	if (partida.estado == 2) {
+		ctx.fillText(partida.actual, 248, 50);
+	};
+
+	if (partida.estado == 3) {
+		ctx.fillStyle = "rgba(0,128,255,0.7)";
+		ctx.fillRect(20,120,460,240);
+		ctx.font = " bold 60px Helvetica Neue";
+		ctx.fillStyle = "#FFFFFF";
+		ctx.fillText("Actual:  " + partida.actual, 140, 200);
+		ctx.fillStyle = "#F8D927";
+		ctx.fillText("Tu Record:  " + partida.maximo, 80, 300);
+	};
+
+	ctx.fillStyle = "#F7F7F7";
+
+	ctx.font = " bold 60px Neue";
+	ctx.fillStyle = "#F7F7F7";
 
 	ctx.font = " normal 18px Helvetica Neue";
 	ctx.fillText("Por: @MorenoDaryl ", 340, 490);
@@ -185,7 +224,7 @@ function animarTubos(){
 			if (woppy.alto < verAlto(tubo[i])) { // si cuando wopy esta pasando por los tubos y choca con la parte superior
 				//perdio :s
 				woppy.vivo = false; // muerto
-			}else if(woppy.alto + images.woppy.height > verAlto(tubo[i]) + 143){ // si woppy toca por la parte inferior del tuvo pierde
+			}else if(woppy.alto + images.woppy.height > verAlto(tubo[i]) + 152){ // si woppy toca por la parte inferior del tuvo pierde
 				woppy.vivo = false;
 			}
 			else{
@@ -213,26 +252,24 @@ function animarTubos(){
 	ctx.drawImage(images.tubos,tubo[2].posx,tubo[2].alto);
 }
 
+
+var aceleracioninicio = 0.4;
 function animarWoppy(){
 	var aceleracion = 0.02;
-	var maxAceleracion = 2.5  ;
-	var arriba;
+	var maxAceleracion = 2.3  ;
+	
+
 	if(images.woppymuertoCargado && partida.estado == 1){
 		ctx.drawImage(images.woppy,woppy.posx,woppy.alto);
-
-		if (woppy.alto > 200 && !arriba) {
-			woppy.aceleracion -= 0.002;
-		}else{
-			arriba = true;
+		
+		if (woppy.alto < 170) {
+			aceleracioninicio += 0.0017;
+		}
+		else if (woppy.alto > 220) {
+			aceleracioninicio -= 0.017;
 		}
 
-		if (woppy.alto < 400 && arriba) {
-			woppy.aceleracion += 0.002;
-		}else{
-			arriba = false;
-		}
-
-		woppy.alto += woppy.aceleracion;
+		woppy.alto += aceleracioninicio;
 	}
 	if(images.woppymuertoCargado && partida.estado == 2) {
 		
@@ -272,41 +309,47 @@ function animarWoppy(){
 }
 
 document.addEventListener("keydown",function(e){
-
 	if (e.keyCode == key.space) {
-		if (partida.estado ==1) {
-			partida.estado = 2;
-		};
-		if (partida.estado == 2 & woppy.vivo) {
-			key.activo = true;
-		};
-		
+		c();
 	}; 
 	e.preventDefault();
-	resetear();
 });
 
-document.addEventListener("touchstart",function(e){
-	if (partida.estado ==1) {
-		partida.estado = 2;
-	};
-	if (partida.estado == 2 & woppy.vivo) {
-		key.activo = true;
-	};	
-	e.preventDefault();
-	resetear();
-});
 
-document.getElementById("micanvas").addEventListener("mousedown",function(e){
-	if (partida.estado ==1) {
-		partida.estado = 2;
-	};
-	if (partida.estado == 2 & woppy.vivo) {
-		key.activo = true;
+function ejecutarEventos(){
+	
+
+	if (isTouch) {
+		document.getElementById("mitap").style.display = "block";
+		document.getElementById("mitap").addEventListener("touchstart",function(e){
+			c();
+		});
+	}else{
+		document.getElementById("mitap").style.display = "none";
+	}
+
+	
+	document.getElementById("micanvas").addEventListener("mousedown",function(e){
 		e.preventDefault();
+		c();
+	});
+}
+
+
+
+
+function c(){
+	if (partida.estado ==1) {
+		partida.estado = 2;
+	};
+	if (partida.estado == 2 & woppy.vivo) {
+		key.activo = true;
+		if (!isTouch) {
+			tap.play();
+		};
 	};	
 	resetear();
-});
+}
 
 function resetear(){
 	if (!woppy.vivo && partida.estado==3) {
