@@ -179,11 +179,11 @@ function dibujar(){
 	if (partida.estado == 3) {
 		ctx.fillStyle = "rgba(0,128,255,0.7)";
 		ctx.fillRect(20,120,460,240);
-		ctx.font = " bold 60px Helvetica Neue";
+		ctx.font = " bold 55px Helvetica Neue";
 		ctx.fillStyle = "#FFFFFF";
 		ctx.fillText("Actual:  " + partida.actual, 140, 200);
 		ctx.fillStyle = "#F8D927";
-		ctx.fillText("Tu Record:  " + partida.maximo, 80, 300);
+		ctx.fillText("Tu Record:  " + partida.maximo, 60, 300);
 	};
 
 	ctx.fillStyle = "#F7F7F7";
